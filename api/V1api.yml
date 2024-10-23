@@ -1,0 +1,1636 @@
+swagger: "2.0"
+info:
+  description: API (PIAF) for integration between Salesforce/Partners to OneSite (Realpage)
+  version: "1.0.0"
+  title: Prometheus PIAF API
+basePath: "/api/v1"
+schemes:
+  - "https"
+  - "http"
+tags:
+  - name: Guest Cards
+    description: Create, Find and Update Prospect (Guest Card) Related information
+  - name: Quotes
+    description: Create, Find Quotes from OneSite
+  - name: Property Pricing
+    description: Get Price, Unit availability and Rent Matrix
+  - name: Resident
+    description: Get Resident information
+  - name: Floor Plans
+    description: Get Floor Plan related Information
+  - name: Units
+    description: Get All Units and Availability Units of a Property
+  - name: Amenities
+    description: Get Amenities at the Neighborhood and Unit level
+  - name: Lease Info
+    description: All APIs to get lease related information
+  - name: Survey
+    description: Survey Related Information of Prospects, Households
+  - name: RealPage
+    description: This Defines Objects of the RPX Controller
+  - name: Web
+    description: Web Functions
+  - name: Work Order
+    description: Work Orders related
+  - name: Proxy
+    description: Proxy Functions, Primarily for Prometheus Partners
+  - name: MountainView
+    description: RealPage MountainView aggregations
+  - name: Service Request
+    description: Get Service Requests Completed for a date range
+  - name: Specials
+    description: Get Neighborhood Specials for a given neighborhood Id
+  - name: webPlus
+    description: All functions for the new website 
+paths:
+  /ping:
+    get:
+      summary: "Get Server Information"
+      tags:
+      - RealPage
+      operationId: "ping"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "success"
+          schema:
+            $ref: "#/definitions/ServerInfo"
+  /capabilities:
+    get:
+      summary: "Get RealPage RPX Capabilities"
+      tags:
+      - RealPage
+      operationId: "testing"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "success"
+  /getSubscriptions:
+    get:
+      summary: "Get RealPage RPX Subscriptions"
+      tags:
+      - RealPage
+      operationId: "getSubscriptions"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "success"
+  /getNeighborhoodSpecials:
+    post:
+      summary: "Get active specials"
+      tags:
+      - Specials
+      operationId: "getNeighborhoodSpecials"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Data Object for NeighborhoodSpecials"
+        required: true
+        schema:
+          $ref: "#/definitions/getSpecials"
+      responses:
+        200:
+          description: "success"
+  /getAmenities:
+    post:
+      summary: "Get all amenities of a given property"
+      tags:
+      - Amenities
+      operationId: "getAmenities"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Data Object to find Amenities"
+        required: true
+        schema:
+          $ref: "#/definitions/getAmenities"
+      responses:
+        200:
+          description: "success"
+  /getResidentEventsByDate:
+    post:
+      summary: "Get Current/Former resident events by date range"
+      tags:
+      - Resident
+      operationId: "getResidentEventsByDate"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Data object to get resident events"
+        required: true
+        schema:
+          $ref: "#/definitions/getResidentEventsByDate"
+      responses:
+        200:
+          description: "success"
+  /getServiceRequestsByDate:
+    post:
+      summary: "Get Service Requests by date range"
+      tags:
+      - Service Request
+      operationId: "getServiceRequestsByDate"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Data object to get Service Requests"
+        required: true
+        schema:
+          $ref: "#/definitions/getServiceRequestsByDate"
+      responses:
+        200:
+          description: "success"
+  /getAvailableFloorPlans:
+    post:
+      summary: "Get Available Floor Plans of a Property"
+      tags:
+      - Amenities
+      operationId: "getAvailableFloorPlans"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Data Object to find Available Floor Plans"
+        required: true
+        schema:
+          $ref: "#/definitions/AvailableFloorPlans"
+      responses:
+        200:
+          description: "success"
+  /getFloorPlanStartPrice:
+    post:
+      summary: "Get Floor Plan level starting price for a property"
+      tags:
+      - Web
+      operationId: "getFloorPlanStartPrice"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Data Object to find Start Price at Floor Plan level"
+        required: true
+        schema:
+          $ref: "#/definitions/FloorPlanStartPrice"
+      responses:
+        200:
+          description: "success"
+  /getUnitList:
+    post:
+      summary: "Get only the available units of a given property"
+      tags:
+      - Units
+      operationId: "getUnitList"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Data Object to find available Units"
+        required: true
+        schema:
+          $ref: "#/definitions/UnitList"
+      responses:
+        200:
+          description: "success"
+  /getUnitsByProperty:
+    post:
+      summary: "Get all Units of a given property"
+      tags:
+      - Units
+      operationId: "getUnitsByProperty"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Data Object to find Units"
+        required: true
+        schema:
+          $ref: "#/definitions/UnitsByProperty"
+      responses:
+        200:
+          description: "success"
+  /getPricingByUnitLite:
+    post:
+      summary: "Get Unit Level best Term and Rent for a given move in date"
+      tags:
+      - Web
+      operationId: "getPricingByUnitLite"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Data Object to find best rate and term"
+        required: true
+        schema:
+          $ref: "#/definitions/UnitListLite"
+      responses:
+        200:
+          description: "success"
+  /getAvailableUnits:
+    post:
+      summary: "get Available Units Only"
+      tags:
+        - Web
+      operationId: "getAvailableUnits"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Data Object to find Available Units"
+        required: true
+        schema:
+          $ref: "#/definitions/UnitList"
+      responses:
+        200:
+          description: "success"
+  /getFloorPlans:
+    post:
+      summary: "Get Floor Plans of a given property"
+      tags:
+      - Floor Plans
+      operationId: "getFloorPlans"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "get Floor Plans"
+        required: true
+        schema:
+          $ref: "#/definitions/FloorPlans"
+      responses:
+        200:
+          description: "success"
+  /getFloorPlanList:
+    post:
+      summary: "Get Floor Plan List of a given property"
+      tags:
+      - Floor Plans
+      operationId: "getFloorPlanList"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "get Floor Plan List"
+        required: true
+        schema:
+          $ref: "#/definitions/FloorPlans"
+      responses:
+        200:
+          description: "success"
+  /getLeaseInfo:
+    post:
+      summary: "Get Lease Information of a given property"
+      tags:
+      - Lease Info
+      operationId: "getLeaseInfo"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "get Lease Information"
+        required: true
+        schema:
+          $ref: "#/definitions/LeaseInfo"
+      responses:
+        200:
+          description: "success"
+  /getResidentListInfo:
+    post:
+      summary: "Get Resident List Info"
+      tags:
+      - Resident
+      operationId: "getResidentListInfo"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "get Resident List Information"
+        required: true
+        schema:
+          $ref: "#/definitions/ResidentListInfo"
+      responses:
+        200:
+          description: "success"
+  /getProspectSurveyList:
+    post:
+      summary: "Get Prospect Survey List Information"
+      tags:
+      - Survey
+      operationId: "getProspectSurveyList"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "get Prospect Survey related Information"
+        required: true
+        schema:
+          $ref: "#/definitions/ProspectSurveyList"
+      responses:
+        200:
+          description: "success"
+  /getResidentList:
+    post:
+      summary: "Get Resident List Information"
+      tags:
+      - Resident
+      operationId: "getResidentList"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "get Resident List related Information"
+        required: true
+        schema:
+          $ref: "#/definitions/ResidentList"
+      responses:
+        200:
+          description: "success"
+  /getHouseholdSurveyList:
+    post:
+      summary: "Get Household Survey List Information"
+      tags:
+      - Survey
+      operationId: "getHouseholdSurveyList"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "get Household Survey related Information"
+        required: true
+        schema:
+          $ref: "#/definitions/HouseholdSurveyList"
+      responses:
+        200:
+          description: "success"
+  /getWorkOrderSurveyList:
+    post:
+      summary: "Get WorkOrder Survey List Information"
+      tags:
+      - Work Order
+      operationId: "getWorkOrderSurveyList"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "get WorkOrder Survey related Information"
+        required: true
+        schema:
+          $ref: "#/definitions/WorkOrderSurveyList"
+      responses:
+        200:
+          description: "success"
+  /getPetInformation:
+    post:
+      summary: "Get Pets related Information"
+      tags:
+      - Guest Cards
+      operationId: "getPetInformation"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "get Pet related Information"
+        required: true
+        schema:
+          $ref: "#/definitions/PetInformation"
+      responses:
+        200:
+          description: "success"
+  /getUnitStatus:
+    post:
+      summary: "Unit Status by Property"
+      tags:
+      - Units
+      operationId: "unitList"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Object to get the status of a particular unit"
+        required: true
+        schema:
+          $ref: "#/definitions/UnitStatus"
+      responses:
+        200:
+          description: "success"
+  /proxyGetUnits:
+    post:
+      summary: "Find Units by Property"
+      tags:
+      - Proxy
+      operationId: "proxyGetUnits"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Data Object to find Units"
+        required: true
+        schema:
+          $ref: "#/definitions/ProxyUnitsByProperty"
+      responses:
+        200:
+          description: "success"
+  /getPricing:
+    post:
+      summary: "Find Pricing and Unit Availability (without the Rent Matrix)"
+      tags:
+        - Property Pricing
+      operationId: "getPricing"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Data Object to find Pricing"
+        required: true
+        schema:
+          $ref: "#/definitions/Pricing"
+      responses:
+        200:
+          description: "success"
+  /getPricing2:
+    post:
+      summary: "Find Pricing and Rent Matrix for units available (including Rent Matrix)"
+      tags:
+        - Property Pricing
+      operationId: "getPricing2"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Data Object to find Pricing"
+        required: true
+        schema:
+          $ref: "#/definitions/Pricing"
+      responses:
+        200:
+          description: "success"
+  /getPricing3:
+    post:
+      summary: "Find Pricing and Rent Matrix for units available (including Rent Matrix)"
+      tags:
+        - Property Pricing
+      operationId: "getPricing3"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Data Object to find Pricing"
+        required: true
+        schema:
+          $ref: "#/definitions/Pricing3"
+      responses:
+        200:
+          description: "success"
+  /getPricingByUnit2:
+    post:
+      summary: "Find Pricing and Unit Availability and Rent Matrix for a particular Unit"
+      tags:
+        - Property Pricing
+      operationId: "getPricingByUnit2"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Data Object to find Pricing"
+        required: true
+        schema:
+          $ref: "#/definitions/PricingByUnit2"
+      responses:
+        200:
+          description: "success"
+  /getPricingByUnit:
+    post:
+      summary: "Pricing for a given unit and Unit Availability and Rent Matrix for a particular Unit"
+      tags:
+        - Property Pricing
+      operationId: "getPricingByUnit"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Data Object to find Pricing"
+        required: true
+        schema:
+          $ref: "#/definitions/PricingByUnit"
+      responses:
+        200:
+          description: "success"
+  /proxyGetPricing:
+    post:
+      summary: "Find Pricing and Rent Matrix for units available"
+      tags:
+        - Proxy
+      operationId: "proxyGetPricing"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Data Object to find Pricing"
+        required: true
+        schema:
+          $ref: "#/definitions/ProxyPricing"
+      responses:
+        200:
+          description: "success"
+  /webGetFloorPlanList:
+    post:
+      summary: "Get Floor Plans for the WebSite Pricing call"
+      tags:
+        - Web
+      operationId: "webGetFloorPlanList"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Floor Plans of a given neighborhood"
+        required: true
+        schema:
+          $ref: "#/definitions/ProxyFloorplans"
+      responses:
+        200:
+          description: "success"
+  /UATwebFloorPricing:
+    post:
+      summary: "UAT Web Floor Plan Pricings"
+      tags:
+        - Property Pricing
+      operationId: "UATwebFloorPricing"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "API to get the Pricing per floor plans, called from the Web"
+        required: true
+        schema:
+          $ref: "#/definitions/ProxyFloorplans"
+      responses:
+        200:
+          description: "success"
+  /webFloorPricing:
+    post:
+      summary: "Floor Plan Pricings"
+      tags:
+        - Web
+      operationId: "webFloorPricing"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Data Object to find Pricing"
+        required: true
+        schema:
+          $ref: "#/definitions/ProxyFloorplans"
+      responses:
+        200:
+          description: "success"
+  /webFloorPricing2:
+    post:
+      summary: "Find min unit level rent for all available untis.."
+      tags:
+        - Web
+      operationId: "webFloorPricing2"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Data Object to find min Rent"
+        required: true
+        schema:
+          $ref: "#/definitions/ProxyFloorplans"
+      responses:
+        200:
+          description: "success"
+  /insertProspect:
+    post:
+      summary: "Add a prospect to a property"
+      tags:
+        - Guest Cards
+      operationId: "insertProspect"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Data Object to Insert Guest/Prospect"
+        required: true
+        schema:
+          $ref: "#/definitions/Prospect"
+      responses:
+        200:
+          description: "success"
+  /prospectSearch:
+    post:
+      summary: "Search for a Prospect Activity on a date range"
+      tags:
+        - Guest Cards
+      operationId: "prospectSearch"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Search for a Prospect Activity on a date range"
+        required: true
+        schema:
+          $ref: "#/definitions/ProspectSearchActivity"
+      responses:
+        200:
+          description: "success"
+  /proxyInsertProspect:
+    post:
+      summary: "Add a propsect to a property"
+      tags:
+        - Proxy
+      operationId: "proxyInsertProspect"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Data Object to Insert Guest/Prospect"
+        required: true
+        schema:
+          $ref: "#/definitions/ProxyProspect"
+      responses:
+        200:
+          description: "success"
+  /proxyGetPricingByLocation:
+    post:
+      summary: "Find Apartments in Array by Location"
+      tags:
+        - Proxy
+      operationId: "proxyGetPricingByLocation"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Data Object to find Pricing"
+        required: true
+        schema:
+          $ref: "#/definitions/PricingLocation"
+      responses:
+        200:
+          description: "success"
+  /prospects:
+    post:
+      summary: "finds Prospect in property"
+      tags:
+        - Guest Cards
+      operationId: "prospects"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Data Object to Find Guest/Prospect"
+        required: true
+        schema:
+          $ref: "#/definitions/ProspectSearch"
+      responses:
+        200:
+          description: "success"
+  /prospectsByDate:
+    post:
+      summary: "finds Prospect in property by a date range"
+      tags:
+        - Guest Cards
+      operationId: "prospectsByDate"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Data Object to Find Guest/Prospect"
+        required: true
+        schema:
+          $ref: "#/definitions/ProspectSearch2"
+      responses:
+        200:
+          description: "success"
+  /UATinsertProspect:
+    post:
+      summary: "Create a prospect in a dev/uat env"
+      tags:
+        - Guest Cards
+      operationId: "UATinsertProspect"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Data Object to Insert Guest/Prospect"
+        required: true
+        schema:
+          $ref: "#/definitions/Prospect"      
+      responses:
+        200:
+          description: "success"
+  /insertWebProspect:
+    post:
+      summary: "Create a prospect in a dev/uat env"
+      tags:
+        - Guest Cards
+      operationId: "insertWebProspect"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Data Object to Insert Guest/Prospect"
+        required: true
+        schema:
+          $ref: "#/definitions/Prospect"      
+      responses:
+        200:
+          description: "success"
+  /UATprospects:
+    get:
+      summary: "Find a prospect in a dev/uat env"
+      tags:
+        - Guest Cards
+      operationId: "UATprospects"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "success"
+  /UATupdateProspect:
+    post:
+      summary: "update a prospect in a dev/uat env"
+      tags:
+        - Guest Cards
+      operationId: "UATupdateProspect"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Data Object to Insert Guest/Prospect"
+        required: true
+        schema:
+          $ref: "#/definitions/Prospect2"      
+      responses:
+        200:
+          description: "success"
+  /updateProspect:
+    post:
+      summary: "Updates Prospect in property"
+      tags:
+        - Guest Cards
+      operationId: "updateProspect"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Data Object to Insert Guest/Prospect"
+        required: true
+        schema:
+          $ref: "#/definitions/Prospect2"      
+      responses:
+        200:
+          description: "success"          
+  /createQuote:
+    post:
+      summary: "(DEPRECATED) Creates Quote for Guest in property"
+      tags:
+        - Quotes
+      operationId: "createQuote"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Data Object to Create Quote"
+        required: true
+        schema:
+          $ref: "#/definitions/Quote"
+      responses:
+        200:
+          description: "success"
+  /fetchQuoteByQuoteID:
+    post:
+      summary: "Finds Quote for By QuoteID in property"
+      tags:
+        - Quotes
+      operationId: "Fetchsinglequote"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Data Object to Find Quote"
+        required: true
+        schema:
+          $ref: "#/definitions/QuoteByQuote"
+      responses:
+        200:
+          description: "success"
+  /getPricedQuote:
+    post:
+      summary: "(DEPRECATED) Find Apartments in Array of SiteIDS"
+      tags:
+        - Quotes
+      operationId: "getPricedQuote"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Data Object to find Pricing"
+        required: true
+        schema:
+          $ref: "#/definitions/PricedQuote"
+      responses:
+        200:
+          description: "success"
+  /getPricedQuote2:
+    post:
+      summary: "(DEPRECIATED) Find Apartments in Array of SiteIDS"
+      tags:
+        - Quotes
+      operationId: "getPricedQuote2"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Data Object to find Pricing"
+        required: true
+        schema:
+          $ref: "#/definitions/PricedQuote"
+      responses:
+        200:
+          description: "success"
+  /getPricedQuote3:
+    post:
+      summary: "Generate a new Quote for an available unit"
+      tags:
+        - Quotes
+      operationId: "getPricedQuote3"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Generate Quote"
+        required: true
+        schema:
+          $ref: "#/definitions/PricedQuote"
+      responses:
+        200:
+          description: "success"
+  /getPricedQuote4:
+    post:
+      summary: "Generate Quote (including non-yieldstar neighborhoods)"
+      tags:
+        - Quotes
+      operationId: "getPricedQuote4"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Generate Quote"
+        required: true
+        schema:
+          $ref: "#/definitions/PricedQuote"
+      responses:
+        200:
+          description: "success"
+  /getUATWebQuote:
+    post:
+      summary: "Generate a new Quote from Web"
+      tags:
+        - Quotes
+      operationId: "getUATWebQuote"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Generate Quote"
+        required: true
+        schema:
+          $ref: "#/definitions/WebQuote"
+      responses:
+        200:
+          description: "success"
+  /getWebQuote:
+    post:
+      summary: "Generate a new Quote from Web"
+      tags:
+        - Quotes
+      operationId: "getWebQuote"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Generate Quote"
+        required: true
+        schema:
+          $ref: "#/definitions/WebQuote"
+      responses:
+        200:
+          description: "success"
+  /getPaymentSchedule:
+    post:
+      summary: "Get Payment Schedule"
+      tags:
+        - Quotes
+      operationId: "getPaymentSchedule"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Data Object to find Pricing"
+        required: true
+        schema:
+          $ref: "#/definitions/PaymentSchedule"
+      responses:
+        200:
+          description: "success"
+definitions:
+  ServerInfo:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+      description:
+        type: "string"
+      version:
+        type: "string"
+      uptime:
+        type: "number"
+  Prospect:
+    type: "object"
+    properties:
+      pmcid:
+        type: "string"
+        example: "1240715"
+      siteid:
+        type: "string"
+        example: "4632028"
+      firstname:
+        type: "string"
+        example: "John"
+      middlename:
+        type: "string"
+        example: "D"
+      lastname:
+        type: "string"
+        example: "Doe"
+      email:
+        type: "string"
+        example: "JDoe@JDoe.net"
+      phonenumber:
+        type: "string"
+        example: "5558675309"
+      aptminute:
+        type: "string"
+        example: "30"
+      apthour:
+        type: "string"
+        example: "10"
+      aptday:
+        type: "string"
+        example: "01"
+      aptmonth:
+        type: "string"
+        example: "05"
+      aptyear:
+        type: "string"
+        example: "2020"
+      aptpmcid:
+        type: "string"
+        example: "1240715"
+      aptsiteid:
+        type: "string"
+        example: "4632028"
+  ProspectSearchActivity:
+    type: "object"
+    properties:
+      pmcid:
+        type: "string"
+        example: "1240034"
+      siteid:
+        type: "string"
+        example: "1241361"
+      dateFrom:
+        type: "string"
+        example: "YYYY-MM-DDThh:mm:ss"
+      dateTo:
+        type: "string"
+        example: "YYYY-MM-DDThh:mm:ss"
+  Prospect2:
+    type: "object"
+    properties:
+      pmcid:
+        type: "string"
+        example: "1240715"
+      siteid:
+        type: "string"
+        example: "4632028"
+      firstname:
+        type: "string"
+        example: "John"
+      middlename:
+        type: "string"
+        example: "D"
+      lastname:
+        type: "string"
+        example: "Doe"
+      leasingagentid:
+        type: "string"
+        example: "47833949"
+      customerid:
+        type: "string"
+        example: "18310449"
+      relationshipid:
+        type: "string"
+        example: "H"
+  ProxyProspect:
+    type: "object"
+    properties:
+      bearer:
+        type: "string"
+        example: "testtoken"
+      pmcid:
+        type: "string"
+        example: "1240715"
+      siteid:
+        type: "string"
+        example: "4632028"
+      firstname:
+        type: "string"
+        example: "John"
+      middlename:
+        type: "string"
+        example: "D"
+      lastname:
+        type: "string"
+        example: "Doe"
+      email:
+        type: "string"
+        example: "JDoe@JDoe.net"
+      phonenumber:
+        type: "string"
+        example: "5558675309"
+      aptminute:
+        type: "string"
+        example: "30"
+      apthour:
+        type: "string"
+        example: "10"
+      aptday:
+        type: "string"
+        example: "01"
+      aptmonth:
+        type: "string"
+        example: "05"
+      aptyear:
+        type: "string"
+        example: "2020"
+      aptpmcid:
+        type: "string"
+        example: "1240715"
+      aptsiteid:
+        type: "string"
+        example: "4632028"
+  ProspectSearch:
+    type: "object"
+    properties:
+      pmcid:
+        type: "string"
+        example: "1240715"
+      siteid:
+        type: "string"
+        example: "4632028"
+      guestcardid:
+        type: "string"
+        example: "9016030"
+  ProspectSearch2:
+    type: "object"
+    properties:
+      pmcid:
+        type: "string"
+        example: "1240715"
+      siteid:
+        type: "string"
+        example: "4632028"
+      activityFrom:
+        type: "string"
+        example: "YYYY-MM-DD"
+  ProxyFloorplans:
+    type: "object"
+    properties:
+      pmcid:
+        type: "string"
+        example: "1240034"
+      siteid:
+        type: "string"
+        example: "4632028"
+  UnitList:
+    type: "object"
+    properties:
+      pmcid:
+        type: "string"
+        example: "1240034"
+      siteid:
+        type: "string"
+        example: "4774078"
+  UnitListLite:
+    type: "object"
+    properties:
+      pmcid:
+        type: "string"
+        example: "1240034"
+      siteid:
+        type: "string"
+        example: "4774078"
+      unitid:
+        type: "string"
+        example: "123"
+      dateNeeded:
+        type: "string"
+        example: "YYYY-MM-DD"
+  Pricing:
+    type: "object"
+    properties:
+      pmcid:
+        type: "string"
+        example: "1240034"
+      siteids:
+        type: "array"
+        example: ["3848844","4004472","1008335","2294770","1970361","1241363","1241238","3646139","3578242","2757018","2366799"]
+      beds:
+        type: "string"
+        example: "2"
+      baths:
+        type: "string"
+        example: "2"
+      dateNeeded:
+        type: "string"
+        example: "YYYY-MM-DD"
+  Pricing3:
+    type: "object"
+    properties:
+      pmcid:
+        type: "string"
+        example: "1240034"
+      siteid:
+        type: "string"
+        example: "4797191"
+      dateNeeded:
+        type: "string"
+        example: "YYYY-MM-DD"
+  PricingByUnit2:
+    type: "object"
+    properties:
+      pmcid:
+        type: "string"
+        example: "1240034"
+      siteid:
+        type: "string"
+        example: "3848844"
+      dateNeeded:
+        type: "string"
+        example: "YYYY-MM-DD"
+      UnitId:
+        type: "string"
+        example: "199"
+  PricingByUnit:
+    type: "object"
+    properties:
+      pmcid:
+        type: "string"
+        example: "1240034"
+      siteids:
+        type: "array"
+        example: ["3848844","4004472","1008335","2294770","1970361","1241363","1241238","3646139","3578242","2757018","2366799"]
+      beds:
+        type: "string"
+        example: "2"
+      baths:
+        type: "string"
+        example: "2"
+      dateNeeded:
+        type: "string"
+        example: "YYYY-MM-DD"
+      UnitId:
+        type: "string"
+        example: "199"
+  ProxyPricing:
+    type: "object"
+    properties:
+      bearer:
+        type: "string"
+        example: "testtoken"
+      pmcid:
+        type: "string"
+        example: "1240034"
+      siteids:
+        type: "array"
+        example: ["3848844","4004472","1008335","2294770","1970361","1241363","1241238","3646139","3578242","2757018","2366799"]
+      beds:
+        type: "string"
+        example: "2"
+      baths:
+        type: "string"
+        example: "2"
+      dateNeeded:
+        type: "string"
+        example: "YYYY-MM-DD"
+  PricingLocation:
+    type: "object"
+    properties:
+      bearer:
+        type: "string"
+        example: "testtoken"
+      pmcid: 
+        type: "string"
+        example: "1240034"
+      lat:
+        type: "string"
+        example: "38.8977"
+      lng:
+        type: "string"
+        example: "77.0365"
+      radius:
+        type: "string"
+        example: "5"
+      beds:
+        type: "string"
+        example: "2"
+      baths:
+        type: "string"
+        example: "2"
+      dateNeeded:
+        type: "string"
+        example: "YYYY-MM-DD"
+  Quote:
+    type: "object"
+    properties:
+      pmcid:
+        type: "string"
+        example: "1240715"
+      siteid:
+        type: "string"
+        example: "4632028"
+      guestcardid:
+        type: "string"
+        example: "9016030"
+      leasetermmonths:
+        type: "string"
+        example: "0"
+      monthelypaymentscheduleid:
+        type: "string"
+        example: "0"
+      deposit:
+        type: "string"
+        example: "0"
+      expirationdate:
+        type: "string"
+        example: "2020-12-25"
+      leasestartdate:
+        type: "string"
+        example: "2020-12-01"
+      moveindate:
+        type: "string"
+        example: "2020-12-02"
+      moveoutdate:
+        type: "string"
+        example: "2020-12-24"
+      rent:
+        type: "string"
+        example: "1"
+      unit:
+        type: "string"
+        example: ""
+      building:
+        type: "string"
+        example: ""
+      leaseingagentid:
+        type: "string"
+        example: "0"
+  QuoteByQuote:
+    type: "object"
+    properties:
+      pmcid:
+        type: "string"
+        example: "1240715"
+      siteid:
+        type: "string"
+        example: "4632028"
+      quoteid:
+        type: "string"
+        example: "7011922"
+  PaymentSchedule:
+    type: "object"
+    properties:
+      pmcid:
+        type: "string"
+        example: "1240715"
+      siteid:
+        type: "string"
+        example: "4632028"
+      quoteid:
+        type: "string"
+        example: "7011922"
+  FloorPlans:
+    type: "object"
+    properties:
+      pmcid:
+        type: "string"
+        example: "1240034"
+      siteid:
+        type: "string"
+        example: "4774078"
+  LeaseInfo:
+    type: "object"
+    properties:
+      pmcid:
+        type: "string"
+        example: "1240715"
+      siteid:
+        type: "string"
+        example: "4632028"
+  ProspectSurveyList:
+    type: "object"
+    properties:
+      pmcid:
+        type: "string"
+        example: "1240715"
+      siteid:
+        type: "string"
+        example: "4632028"
+      startDate:
+        type: "string"
+        example: "2022-04-11"
+      endDate:
+        type: "string"
+        example: "2022-04-12"
+  PetInformation:
+    type: "object"
+    properties:
+      pmcid:
+        type: "string"
+        example: "1240715"
+      siteid:
+        type: "string"
+        example: "4632028"
+      leaseId:
+        type: "string"
+        example: "13343"
+  ResidentList:
+    type: "object"
+    properties:
+      pmcid:
+        type: "string"
+        example: "1240715"
+      siteid:
+        type: "string"
+        example: "4632028"
+      headofhousehold:
+        type: "string"
+        example: "1"
+  HouseholdSurveyList:
+    type: "object"
+    properties:
+      pmcid:
+        type: "string"
+        example: "1240715"
+      siteid:
+        type: "string"
+        example: "4632028"
+      startDate:
+        type: "string"
+        example: "2022-04-11"
+      endDate:
+        type: "string"
+        example: "2022-04-12"
+  WorkOrderSurveyList:
+    type: "object"
+    properties:
+      pmcid:
+        type: "string"
+        example: "1240715"
+      siteid:
+        type: "string"
+        example: "4632028"
+      startDate:
+        type: "string"
+        example: "2022-04-11"
+      endDate:
+        type: "string"
+        example: "2022-04-12"
+      status:
+        type: "string"
+        example: "In Progress"
+  ResidentListInfo:
+    type: "object"
+    properties:
+      pmcid:
+        type: "string"
+        example: "1240715"
+      siteid:
+        type: "string"
+        example: "4632028"
+      residentId:
+        type: "string"
+        example: "12715"
+  UnitsByProperty:
+    type: "object"
+    properties:
+      pmcid:
+        type: "string"
+        example: "1240715"
+      siteid:
+        type: "string"
+        example: "4632028"
+  AvailableFloorPlans:
+    type: "object"
+    properties:
+      pmcid:
+        type: "string"
+        example: "1240034"
+      siteid:
+        type: "string"
+        example: "4774078"
+      needByDate:
+        type: "string"
+        example: "2022-11-30"
+  FloorPlanStartPrice:
+    type: "object"
+    properties:
+      pmcid:
+        type: "string"
+        example: "1240034"
+      siteid:
+        type: "string"
+        example: "4774078"
+  UnitStatus:
+    type: "object"
+    properties:
+      pmcid:
+        type: "string"
+        example: "1240715"
+      siteid:
+        type: "string"
+        example: "4632028"
+  ProxyUnitsByProperty:
+    type: "object"
+    properties:
+      bearer:
+        type: "string"
+        example: "testtoken"
+      pmcid:
+        type: "string"
+        example: "1240715"
+      siteid:
+        type: "string"
+        example: "4632028"
+  PricedQuote:
+    type: "object"
+    properties:
+      pmcid:
+        type: "string"
+        example: "1240715"
+      siteid:
+        type: "string"
+        example: "4632028"
+      guestcardid:
+        type: "string"
+        example: "9016030"
+      unitnumber:
+        type: "string"
+        example: ""
+      dateNeeded:
+        type: "string"
+        example: "YYYY-MM-DD"
+      leasetermmonths:
+        type: "string"
+        example: "0"
+  WebQuote:
+    type: "object"
+    properties:
+      pmcid:
+        type: "string"
+        example: "1240715"
+      siteid:
+        type: "string"
+        example: "4632028"
+      guestcardid:
+        type: "string"
+        example: "9016030"
+      unitnumber:
+        type: "string"
+        example: ""
+      dateNeeded:
+        type: "string"
+        example: "YYYY-MM-DD"
+      leasetermmonths:
+        type: "string"
+        example: "0"
+  getSpecials:
+    type: "object"
+    properties:
+      pmcid:
+        type: "string"
+        example: "1240034"
+      siteid:
+        type: "string"
+        example: "4632028"
+  getAmenities:
+    type: "object"
+    properties:
+      pmcid:
+        type: "string"
+        example: "1240034"
+      siteid:
+        type: "string"
+        example: "4632028"
+      startdate:
+        type: "string"
+        example: "YYYY-MM-DD"
+      enddate:
+        type: "string"
+        example: "YYYY-MM-DD"
+  getResidentEventsByDate:
+    type: "object"
+    properties:
+      pmcid:
+        type: "string"
+        example: "1240034"
+      siteid:
+        type: "string"
+        example: "4774078"
+      startDate:
+        type: "string"
+        example: "YYYY-MM-DD"
+      endDate:
+        type: "string"
+        example: "YYYY-MM-DD"
+      eventFilter:
+        type: "string"
+        example: "MOVEOUT"
+  getServiceRequestsByDate:
+    type: "object"
+    properties:
+      pmcid:
+        type: "string"
+        example: "1240034"
+      siteid:
+        type: "string"
+        example: "4774078"
+      requestedStartDate:
+        type: "string"
+        example: "YYYY-MM-DD"
+      requestedEndDate:
+        type: "string"
+        example: "YYYY-MM-DD"
+      completedStartDate:
+        type: "string"
+        example: "YYYY-MM-DD"
+      completedEndDate:
+        type: "string"
+        example: "YYYY-MM-DD"
