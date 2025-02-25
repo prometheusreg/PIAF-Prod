@@ -2,7 +2,7 @@ var pmcidlookuptable = require("../lookup/pmcidlookup");
 var RPXclient = require("../services/RPX-service");
 
 export class GetPriceAdapter {
-    static getPricing = (body: any, unitList : any, priceList: any ): Promise<any> => {
+    static getPricing = (body: any, index: any, unitList : any, priceList: any ): Promise<any> => {
         return new Promise((resolve: Function, reject: Function) => {
             var args = {
                 "tem:auth": {
@@ -121,7 +121,15 @@ export class GetPriceAdapter {
                                 outputi['bestTerm']=bestTerm;
                                 outputi['bestRent']=bestRent;
                                 outputi['bestDate']=bestDate;
-                                priceList.push(outputi);
+                                if (index!=4){
+                                    priceList.push(outputi);
+                                }
+                                if (index==4 && body['siteid']!='5009682'){
+                                    priceList.push(outputi);
+                                } 
+                                if (index==4 && body['siteid']=='5009682' && outputi['FloorPlan']['FloorPlanName'].startsWith('Plan 1')){
+                                    priceList.push(outputi);
+                                }
                             }
                         }
                     }

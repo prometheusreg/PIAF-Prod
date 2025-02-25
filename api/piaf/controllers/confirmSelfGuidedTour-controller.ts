@@ -1,7 +1,7 @@
 const axios = require("axios").default;
 import * as express from "express";
 var RPXclient = require("../services/RPX-service");
-const getWebQuote = (req: express.Request, res: express.Response) => {
+const confirmSelfGuidedTours = (req: express.Request, res: express.Response) => {
   var body = req.body || {};
   var authSF = {
     method: "post",
@@ -30,7 +30,7 @@ const getWebQuote = (req: express.Request, res: express.Response) => {
       var callSF = {
         method: "post",
         url:
-          "https://prometheusreg--training.sandbox.my.salesforce.com/services/apexrest/v3/createWebQuote",
+          "https://prometheusreg--training.sandbox.my.salesforce.com/services/apexrest/v1/tour24",
         headers: {
           Authorization: "Bearer " + auth['data']['access_token'],
           "content-type": "text/plain",
@@ -38,13 +38,14 @@ const getWebQuote = (req: express.Request, res: express.Response) => {
         },
         data: sfQuoteInput,
       }
+      console.log('reaching here..');
       axios(callSF)
       .then(function (response) {
-        var qrep = JSON.parse(response.data);
-        console.log('Quote Response -> '+qrep);
-        res.send(qrep);
+        //var qrep = JSON.parse(response.data);
+        console.log('Web Hook Response -> '+response.data);
+        res.send("Success");
       })                        
   });
 }
 
-module.exports = getWebQuote;
+module.exports = confirmSelfGuidedTours;

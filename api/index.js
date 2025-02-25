@@ -55,6 +55,7 @@ const insertWebProspect = require("./piaf/controllers/insertWebProspect-controll
 const getAvailableUnits = require("./piaf/controllers/getAvailableUnits-controller");
 const getPricingByUnitLite = require("./piaf/controllers/getPricingByUnitLite-controller");
 const getFloorPlanStartPrice = require("./piaf/controllers/getFloorPlanStartPrice-controller");
+const confirmSelfGuidedTour = require("./piaf/controllers/confirmSelfGuidedTour-controller");
 
 module.exports = {
   ping,
@@ -113,5 +114,6 @@ module.exports = {
   insertWebProspect,
   getAvailableUnits,
   getPricingByUnitLite,
-  getFloorPlanStartPrice
+  getFloorPlanStartPrice,
+  confirmSelfGuidedTour
 }

@@ -28,7 +28,7 @@ const getPricing3 = (req, res) => {
                 var rentList = [];
                 var finalOutput = {};
                 var minRent, maxRent;
-                getPrice2.GetPriceAdapter.getPricing(body, unitList, priceList).then((output) => {
+                getPrice2.GetPriceAdapter.getPricing(body, 1, unitList, priceList).then((output) => {
                     for (var i = 0; i < output.length; i++) {
                         unitList.push(output[i]['Address']['UnitID']);
                         if (unitsMap.get(output[i]['Address']['UnitID']) != 'BMR') {
@@ -42,7 +42,7 @@ const getPricing3 = (req, res) => {
                     }
                     startDate.setDate(startDate.getDate() + 14);
                     body['dateNeeded'] = startDate.toJSON().slice(0, 10);
-                    getPrice2.GetPriceAdapter.getPricing(body, unitList, priceList).then((output) => {
+                    getPrice2.GetPriceAdapter.getPricing(body, 2, unitList, priceList).then((output) => {
                         for (var i = 0; i < output.length; i++) {
                             unitList.push(output[i]['Address']['UnitID']);
                             if (unitsMap.get(output[i]['Address']['UnitID']) != 'BMR') {
@@ -56,7 +56,7 @@ const getPricing3 = (req, res) => {
                         }
                         startDate.setDate(startDate.getDate() + 14);
                         body['dateNeeded'] = startDate.toJSON().slice(0, 10);
-                        getPrice2.GetPriceAdapter.getPricing(body, unitList, priceList).then((output) => {
+                        getPrice2.GetPriceAdapter.getPricing(body, 3, unitList, priceList).then((output) => {
                             for (var i = 0; i < output.length; i++) {
                                 unitList.push(output[i]['Address']['UnitID']);
                                 if (unitsMap.get(output[i]['Address']['UnitID']) != 'BMR') {
@@ -68,9 +68,15 @@ const getPricing3 = (req, res) => {
                             if (output.length > 0) {
                                 priceList = output;
                             }
-                            startDate.setDate(startDate.getDate() + 18);
+                            // patch to extend the availability date to 120 days for McClellan Terrace
+                            if (body['siteid'] == '5009682') {
+                                startDate.setDate(startDate.getDate() + 78);
+                            }
+                            else {
+                                startDate.setDate(startDate.getDate() + 18);
+                            }
                             body['dateNeeded'] = startDate.toJSON().slice(0, 10);
-                            getPrice2.GetPriceAdapter.getPricing(body, unitList, priceList).then((output) => {
+                            getPrice2.GetPriceAdapter.getPricing(body, 4, unitList, priceList).then((output) => {
                                 for (var i = 0; i < output.length; i++) {
                                     unitList.push(output[i]['Address']['UnitID']);
                                     if (unitsMap.get(output[i]['Address']['UnitID']) != 'BMR') {

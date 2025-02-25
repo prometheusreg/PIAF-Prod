@@ -17,8 +17,9 @@ const insertWebProspect = (req, res) => {
         "tem:guestcard": {
             "tem:pmcid": body['pmcid'] || pmcidlookuptable[body['siteid']] || "1240034",
             "tem:siteid": body['siteid'] || "4632028",
-            "tem:contacttype": "R0000001",
+            "tem:contacttype": body['contacttype'] || "R0000001",
             "tem:primaryleadsource": body['primaryleadsource'] || "",
+            "tem:skipduplicatecheck": body['skipduplicatecheck'] || false,
             "tem:datecontact": moment().format("YYYY-MM-DDTHH:mm:ss"),
             "tem:prospects": {
                 "tem:Prospect": {
@@ -32,7 +33,6 @@ const insertWebProspect = (req, res) => {
             }
         }
     };
-    console.log('In InsertWebProspect Begin -> ' + Date());
     RPXclient(function (client) {
         client.insertprospect(args, function (err, result) {
             if (result['insertprospectResult'] && result['insertprospectResult']['InsertProspectResponse']) {
@@ -44,7 +44,6 @@ const insertWebProspect = (req, res) => {
             }
         });
     });
-    console.log('In InsertWebProspect End -> ' + Date());
 };
 module.exports = insertWebProspect;
 //# sourceMappingURL=insertWebProspect-controller.js.map

@@ -16,8 +16,9 @@ const insertProspect = (req: express.Request, res: express.Response) => {
     "tem:guestcard": {
       "tem:pmcid": body['pmcid'] ||  pmcidlookuptable[body['siteid']] || "1240034",
       "tem:siteid": body['siteid'] || "4632028",
-      "tem:contacttype": "R0000001",
+      "tem:contacttype": body['contacttype'] || "R0000001",
       "tem:primaryleadsource": body['primaryleadsource'] || "",
+      "tem:skipduplicatecheck": body['skipduplicatecheck'] || false,
       "tem:datecontact": moment().format("YYYY-MM-DDTHH:mm:ss"),
       "tem:prospects": {
         "tem:Prospect": {
@@ -62,28 +63,13 @@ const insertProspect = (req: express.Request, res: express.Response) => {
   }
   RPXclient(function (client) {
     client.insertprospect(args, function (err, result) {
-      //console.log(JSON.stringify(result, undefined, 4));
       if (result['insertprospectResult'] && result['insertprospectResult']['InsertProspectResponse']) {
         result = result['insertprospectResult']['InsertProspectResponse'];
-        //Shim to Apply guestcardID to CustomerID:
-          /*
-          if (result['Guestcard'] && result['Guestcard']['ID']) {
-          var guestcardID = result['Guestcard']['ID'];
-          if (result['Customers'] && result['Customers']['CustomerID']) {
-            result['Customers']['CustomerID'] = guestcardID;
-          }
-          if (result['CustomerResults'] && result['CustomerResults']['CustomerResult'] && result['CustomerResults']['CustomerResult']['CustomerID']) {
-            result['CustomerResults']['CustomerResult']['CustomerID'] = guestcardID;
-          }
-        }
-        */
-        //EndShim
         res.status(200).json(result);
       }
       else {
         res.status(400).json(result['body']);
       }
-      //console.log(client.lastRequest);
     });
   })
 }

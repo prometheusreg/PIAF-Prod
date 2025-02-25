@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const axios = require("axios").default;
 var RPXclient = require("../services/RPX-service");
-const getWebQuote = (req, res) => {
+const confirmSelfGuidedTours = (req, res) => {
     var body = req.body || {};
     var authSF = {
         method: "post",
@@ -10,7 +10,6 @@ const getWebQuote = (req, res) => {
         headers: {},
         data: {}
     };
-    console.log('Reaching web quote..');
     var sfQuoteInput = {
         pmcId: body['pmcid'] || "1240034",
         siteId: body['siteid'],
@@ -24,10 +23,9 @@ const getWebQuote = (req, res) => {
         lastName: body['lastName']
     };
     axios(authSF).then(function (auth) {
-        console.log('Calling SF..');
         var callSF = {
             method: "post",
-            url: "https://prometheusreg--training.sandbox.my.salesforce.com/services/apexrest/v3/createWebQuote",
+            url: "https://prometheusreg--training.sandbox.my.salesforce.com/services/apexrest/v1/tour24",
             headers: {
                 Authorization: "Bearer " + auth['data']['access_token'],
                 "content-type": "text/plain",
@@ -37,11 +35,11 @@ const getWebQuote = (req, res) => {
         };
         axios(callSF)
             .then(function (response) {
-            var qrep = JSON.parse(response.data);
-            console.log('Quote Response -> ' + qrep);
-            res.send(qrep);
+            //var qrep = JSON.parse(response.data);
+            console.log('Web Hook Response -> ' + response.data);
+            res.send("Success");
         });
     });
 };
-module.exports = getWebQuote;
-//# sourceMappingURL=getWebQuote-controller.js.map
+module.exports = confirmSelfGuidedTours;
+//# sourceMappingURL=confirmSelfGuidedTour-controller.js.map

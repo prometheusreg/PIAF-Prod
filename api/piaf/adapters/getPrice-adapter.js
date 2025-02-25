@@ -5,7 +5,7 @@ var RPXclient = require("../services/RPX-service");
 class GetPriceAdapter {
 }
 exports.GetPriceAdapter = GetPriceAdapter;
-GetPriceAdapter.getPricing = (body, unitList, priceList) => {
+GetPriceAdapter.getPricing = (body, index, unitList, priceList) => {
     return new Promise((resolve, reject) => {
         var args = {
             "tem:auth": {
@@ -120,7 +120,15 @@ GetPriceAdapter.getPricing = (body, unitList, priceList) => {
                             outputi['bestTerm'] = bestTerm;
                             outputi['bestRent'] = bestRent;
                             outputi['bestDate'] = bestDate;
-                            priceList.push(outputi);
+                            if (index != 4) {
+                                priceList.push(outputi);
+                            }
+                            if (index == 4 && body['siteid'] != '5009682') {
+                                priceList.push(outputi);
+                            }
+                            if (index == 4 && body['siteid'] == '5009682' && outputi['FloorPlan']['FloorPlanName'].startsWith('Plan 1')) {
+                                priceList.push(outputi);
+                            }
                         }
                     }
                 }
