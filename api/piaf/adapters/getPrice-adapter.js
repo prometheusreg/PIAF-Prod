@@ -51,7 +51,7 @@ GetPriceAdapter.getPricing = (body, index, unitList, priceList) => {
         var fpMap = new Map();
         RPXclient(function (client) {
             client.getfloorplanlist(args, function (err, result) {
-                if (result['getfloorplanlistResult']) {
+                if (result['getfloorplanlistResult'] && result['getfloorplanlistResult']['GetFloorPlanList'] && result['getfloorplanlistResult']['GetFloorPlanList']['FloorPlanObject']) {
                     for (var j = 0; j < result['getfloorplanlistResult']['GetFloorPlanList']['FloorPlanObject'].length; j++) {
                         fpMap.set(result['getfloorplanlistResult']['GetFloorPlanList']['FloorPlanObject'][j]['FloorPlanCode'], result['getfloorplanlistResult']['GetFloorPlanList']['FloorPlanObject'][j]['MaximumOccupants']);
                     }
@@ -116,19 +116,11 @@ GetPriceAdapter.getPricing = (body, index, unitList, priceList) => {
                             delete result['getunitlistResult']['GetUnitList']['UnitObjects']['UnitObject'][j]['PropertyNumberID'];
                             var outputi = result['getunitlistResult']['GetUnitList']['UnitObjects']['UnitObject'][j];
                             outputi['PropertyNumberID'] = body['siteid'];
-                            outputi['unitOccupancy'] = fpMap.get(result['getunitlistResult']['GetUnitList']['UnitObjects']['UnitObject'][j]['FloorPlan']['FloorPlanCode']) || '5';
+                            outputi['unitOccupancy'] = fpMap.get(result['getunitlistResult']['GetUnitList']['UnitObjects']['UnitObject'][j]['FloorPlan']['FloorPlanCode']) || '3';
                             outputi['bestTerm'] = bestTerm;
                             outputi['bestRent'] = bestRent;
                             outputi['bestDate'] = bestDate;
-                            if (index != 4) {
-                                priceList.push(outputi);
-                            }
-                            if (index == 4 && body['siteid'] != '5009682') {
-                                priceList.push(outputi);
-                            }
-                            if (index == 4 && body['siteid'] == '5009682' && outputi['FloorPlan']['FloorPlanName'].startsWith('Plan 1')) {
-                                priceList.push(outputi);
-                            }
+                            priceList.push(outputi);
                         }
                     }
                 }

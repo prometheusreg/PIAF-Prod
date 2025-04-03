@@ -14,8 +14,11 @@ const getPricing3 = (req, res) => {
         },
         "tem:selectedonly":"true"
     };
-    
+    var finalOutput = {};
     var unitsMap = new Map();
+    if (body['siteid']=='5009682'){
+        res.status(200).json(finalOutput);
+    }
     RPXclientMain(function (client) {
         client.getunits(baseargs, function (err, result) { 
             if (result['getunitsResult']){
@@ -28,7 +31,7 @@ const getPricing3 = (req, res) => {
                 var unitList    = [];
                 var priceList   = [];
                 var rentList    = [];
-                var finalOutput = {};
+                
                 var minRent,maxRent;
                 getPrice2.GetPriceAdapter.getPricing(body,1,unitList,priceList).then((output) => 
                 {

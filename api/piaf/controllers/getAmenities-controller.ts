@@ -54,7 +54,7 @@ const getAmenities = (req: express.Request, res: express.Response) => {
 						}
 						//console.log('FP> '+JSON.stringify(unitsMap.get("222").fpId+','+JSON.stringify(unitsMap.get("222").fpName)));
 						client.getamenities(args, function (err, result) {
-		                    if (result['getamenitiesResult']) {
+		                    if (result['getamenitiesResult'] && result['getamenitiesResult']['GetAmenities'] && result['getamenitiesResult']['GetAmenities']['Amenities']) {
 								for (var k = 0; k < result['getamenitiesResult']['GetAmenities']['Amenities']['Amenity'].length; k++){
 									if (result['getamenitiesResult']['GetAmenities']['Amenities']['Amenity'][k]['UnitID']==null && 
 										result['getamenitiesResult']['GetAmenities']['Amenities']['Amenity'][k]['FloorPlanID']==null)
@@ -116,13 +116,12 @@ const getAmenities = (req: express.Request, res: express.Response) => {
 									thisFloorPlanName=null;
 								}
 								//
-								console.log('reaching here..');
 								finalOutput['amenities']=amenityList;
 								console.log('Final-> '+JSON.stringify(finalOutput,undefined,4));
 								res.status(200).json(finalOutput);
 		             	    }
 		                    else {
-	                         	res.status(400).json(result['body']);
+								res.status(200).json(finalOutput);
 		                    }
 						});
 					}

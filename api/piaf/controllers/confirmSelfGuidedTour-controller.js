@@ -6,38 +6,43 @@ const confirmSelfGuidedTours = (req, res) => {
     var body = req.body || {};
     var authSF = {
         method: "post",
-        url: "https://awsprg01b.prom-online.com/staging/services/oauth2/token",
+        url: "https://awsprg01b.prom-online.com/services/oauth2/token",
         headers: {},
         data: {}
     };
-    var sfQuoteInput = {
-        pmcId: body['pmcid'] || "1240034",
-        siteId: body['siteid'],
-        dateNeeded: body['dateNeeded'],
-        buildingNumber: body['buildingnumber'],
-        unitNumber: body['unitnumber'],
-        leaseTerm: body['leasetermmonths'],
-        guestCardId: body['guestcardid'],
-        email: body['email'],
-        firstName: body['firstName'],
-        lastName: body['lastName']
+    console.log('Details here ');
+    console.log('Start of self guided tour confirmation...' + body['Tour']['Id'] + ', ' + body['Tour']['Property']['Name']);
+    var tourInput = {
+        tourId: body['Tour']['Id'],
+        tourStartTime: body['Tour']['StartTime'],
+        tourEndTime: body['Tour']['EndTime'],
+        propertyId: body['Tour']['Property']['Id'],
+        propertyName: body['Tour']['Property']['Name'],
+        status: body['Tour']['Status'],
+        prospectId: body['Tour']['Prospect']['Id'],
+        prospectFN: body['Tour']['Prospect']['Firstname'],
+        prospectLN: body['Tour']['Prospect']['Lastname'],
+        prospectEmail: body['Tour']['Prospect']['Email'],
+        prospectPhone: body['Tour']['Prospect']['Phone']
     };
     axios(authSF).then(function (auth) {
+        console.log('Calling SF to send tour info');
         var callSF = {
             method: "post",
-            url: "https://prometheusreg--training.sandbox.my.salesforce.com/services/apexrest/v1/tour24",
+            url: "https://prometheusreg.my.salesforce.com/services/apexrest/v1/tour24",
             headers: {
                 Authorization: "Bearer " + auth['data']['access_token'],
                 "content-type": "text/plain",
                 Cookie: "BrowserId=zDWCBVPKEeu2Xe3l8vjfvw",
             },
-            data: sfQuoteInput,
+            data: tourInput,
         };
+        console.log('call SF .' + JSON.stringify(callSF));
         axios(callSF)
             .then(function (response) {
             //var qrep = JSON.parse(response.data);
             console.log('Web Hook Response -> ' + response.data);
-            res.send("Success");
+            res.send("Success Transaction");
         });
     });
 };

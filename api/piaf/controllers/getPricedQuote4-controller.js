@@ -272,13 +272,10 @@ const getPricedQuote4 = (req, res) => {
                 }
             }
             else {
-                //General Error
                 res.status(400).json(result['body']);
-                //console.log(result['body']);
             }
         });
     });
-    console.log('In createQuote End -> ' + Date());
 };
 module.exports = getPricedQuote4;
 //# sourceMappingURL=getPricedQuote4-controller.js.map

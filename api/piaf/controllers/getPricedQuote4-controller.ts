@@ -282,13 +282,9 @@ const getPricedQuote4 = (req: express.Request, res: express.Response) => {
                 }
             }
             else {
-               //General Error
                 res.status(400).json(result['body']);
-                //console.log(result['body']);
             }
         });
     });
-    console.log('In createQuote End -> '+Date());
-
 }
 module.exports = getPricedQuote4;
